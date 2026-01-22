@@ -26,7 +26,7 @@ def find_posts_must_posted(content):
     now_datetime = datetime.now()
 
     for row_number, post in enumerate(content['values'][1:], start=2):
-        want_posting_date = datetime.strptime(post[2], '%d.%m.%y %H:%M')
+        want_posting_date = datetime.strptime(post[2], '%d.%m.%Y %H:%M:%S')
 
         need_publish = (
             (
