@@ -121,9 +121,11 @@ def main():
     must_posted_posts = find_posts_must_posted(content)
     must_delete_posts = find_posts_must_delete(content)
 
-    text = '"Хаббл" - Космический телескоп '    # !!! Сюда нужно чтобы попадал текст с GOOGLE DOCKS
-    post_text = normalize_text(text)
-    image_path = None        # !!! Сюда нужно чтобы попадали изображения с GOOGLE DOCKS
+    if text:
+        post_text = normalize_text(text)
+    else:
+        post_text = None       
+    
     posting_posts(must_posted_posts, post_text, image_path, service)
     delete_posts(must_delete_posts, service)
 
