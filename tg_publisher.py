@@ -3,7 +3,7 @@ from environs import Env
 
 
 
-def publish_post_to_tg(chat_id, bot, text: str = '', photo = None):
+def publish_post_to_tg(chat_id, bot, text: str, photo = None):
 		if photo:
 			result = bot.send_photo(chat_id=chat_id, photo=photo, caption=text)
 			return result['message_id']
