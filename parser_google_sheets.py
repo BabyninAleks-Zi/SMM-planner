@@ -85,10 +85,9 @@ def posting_posts(must_posted_posts, post_text, image_path, service):
 
 def delete_posts(must_delete_posts, service):
     '''Удаляет посты из соцсетей, которые помечены на удаление'''
-
     for row_number, post in must_delete_posts:
         result_message = ''
-        
+
         # Удаление из ВК
         if post[6] == 'TRUE' and post[12] == 'TRUE':
             vk_post_id = post[9]
