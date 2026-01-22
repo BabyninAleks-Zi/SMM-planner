@@ -16,7 +16,8 @@ def delete_post_from_tg(bot, chat_id, post_id):
 	try:
 		result = bot.delete_message(chat_id=chat_id, message_id=post_id)
 		return result
-	except:
-		print('ошибка')
+	except telegram.error.BadRequest as er:
+		print(er)
+		
 
 	# доделать отработку, если пользователь передает только текст или только фото
