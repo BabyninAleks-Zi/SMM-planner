@@ -1,25 +1,7 @@
 import requests
-import hashlib
 import json
 from environs import Env
-
-
-def get_md5(full_string):
-
-	# Проклял сегодня всё что можно, чтобы разобраться с MD5 шифрованием Одноклассников!!!!!!!
-
-    bytes_value = full_string.encode('utf-8')
-    md5_hash_object = hashlib.md5(bytes_value)
-    return md5_hash_object.hexdigest()
-
-
-def make_sig(params, session_secret_key):
-    sorted_params = sorted(params.items())
-    base_string = ''
-    for param_name, param_value in sorted_params:
-        base_string += f'{param_name}={param_value}'
-    full_string = base_string + session_secret_key
-    return get_md5(full_string)
+from utils.ok_md5hex import get_md5, make_sig
 
 
 def ok_api_response(method, extra_params):
@@ -83,7 +65,7 @@ def publish_group_post(group_id, post_text, photo_token):
     )
 
 
-def main():
+def publish_post_to_ok(post_text, image_path):
     env = Env()
     env.read_env()
     
@@ -93,10 +75,7 @@ def main():
     access_token = env.str('OK_ACCESS_TOKEN')
     group_id=env.str('OK_GROUP_ID')
     
-    post_text = 'Космический телескоп «Хаббл»'
-    image_path = 'images/Habble.jpeg'
-	
-	# 1. Получаем upload URL для загрузки изображения:
+    # 1. Получаем upload URL для загрузки изображения:
     upload_data = get_upload_url(group_id)
     upload_url = upload_data['upload_url']
 
@@ -111,8 +90,4 @@ def main():
     # 3. Публикуем пост:
     published_post = publish_group_post(group_id, post_text, photo_token)
     
-    print('Пост опубликован:', published_post)
-
-
-if __name__ == '__main__':
-	main()
+    return published_post
