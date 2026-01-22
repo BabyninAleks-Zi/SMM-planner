@@ -2,7 +2,7 @@ import telegram
 from environs import Env
 
 
-def upload_post(text: str, photo, chat_id, bot):
+def publish_post_to_tg(text: str, photo, chat_id, bot):
 	try:
 		bot.send_photo(chat_id=chat_id, photo=photo, caption=text)
 		return True

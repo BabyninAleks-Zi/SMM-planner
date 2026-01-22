@@ -3,8 +3,8 @@ from datetime import datetime
 from environs import Env
 
 from utils.google_api import auth_in_google, get_sheet_content, update_cell, normalize_text
-from tg_publisher import upload_post
-from ok_publisher import publish_post_to_ok, delete_post_from_ok
+from tg_publisher import publish_post_to_tg
+# from ok_publisher import publish_post_to_ok, delete_post_from_ok
 import telegram
 
 
@@ -71,7 +71,6 @@ def posting_posts(must_posted_posts, post_text, image_path, service):
             
         # if post[5] == 'TRUE' and post[8] == 'FALSE':
         #     #постинг TG
-        #     tg_post_id = upload_post(
         #         'Привет!',
         #         'https://i.pinimg.com/originals/9b/26/fc/9b26fc49e07c6e4c21d00485c733ca8c.jpg',
         #         chat_id,
@@ -80,6 +79,7 @@ def posting_posts(must_posted_posts, post_text, image_path, service):
         #     if tg_post_id:
         #         update_cell(row_number, 'I', True, service)
         #         update_cell(row_number, 'L', tg_post_id, service)
+            tg_post_id = publish_post_to_tg(
 
 
 def main():
