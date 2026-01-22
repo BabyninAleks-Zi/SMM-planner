@@ -4,12 +4,10 @@ from environs import Env
 
 from utils.google_api import auth_in_google, get_sheet_content, update_cell
 from tg_publisher import upload_post
-from ok_publisher import publish_post_to_ok
+from ok_publisher import publish_post_to_ok, delete_post_from_ok
 import telegram
 
 
-
-MUST_POSTED_POSTS = []
 
 # позже вызов env. спрячем под main()
 # env = Env()
@@ -24,20 +22,29 @@ def find_posts_must_posted(content):
     В этот список попадают только те посты, в которых стоит галочка постинга
     и у которых пришло время постинга(настоящее время >= время постинга)
     '''
-    
+    posted_post = []
     now_datetime = datetime.now()
+
     for row_number, post in enumerate(content['values'][1:], start=2):
         want_posting_date = datetime.strptime(post[2], '%d.%m.%y %H:%M')
-        if (
+
+        need_publish = (
             (
                 (post[3] == 'TRUE' and post[6] == 'FALSE')
                 or (post[4] == 'TRUE' and post[7] == 'FALSE')
                 or (post[5] == 'TRUE' and post[8] == 'FALSE')
             ) and now_datetime >= want_posting_date
-        ):
-            if post not in MUST_POSTED_POSTS:
-                MUST_POSTED_POSTS.append((row_number, post))
-    return MUST_POSTED_POSTS
+        )
+
+        need_delete = (
+            (post[6] == 'TRUE' and post[12] == 'TRUE' and post[9])
+            or (post[7] == 'TRUE' and post[13] == 'TRUE' and post[10])
+            or (post[8] == 'TRUE' and post[14] == 'TRUE' and post[11])
+        )
+
+        if need_publish or need_delete:
+            posted_post.append((row_number, post))
+    return posted_post
 
 
 def posting_posts(must_posted_posts, service):
@@ -49,13 +56,20 @@ def posting_posts(must_posted_posts, service):
             # Постинг ОК
             post_text = 'Космический телескоп «Хаббл»'
             image_path = 'images/Habble.jpeg'
-
             ok_post_id = publish_post_to_ok(post_text, image_path)
-
             if ok_post_id:
                 update_cell(row_number, 'H', True, service)  # Пост в OK
                 update_cell(row_number, 'K', ok_post_id, service)  # ID поста в OK
-    
+
+        # Удаление поста
+        if post[7] == 'TRUE' and post[13] == 'TRUE' and post[10]:
+            ok_posted_id = post[10]
+            deleted = delete_post_from_ok(ok_posted_id)
+        
+            if deleted:
+                update_cell(row_number, 'H', False,service)   # Пост в OK
+                update_cell(row_number, 'K', 'Удалён', service)      # ID поста
+
             
         # if post[5] == 'TRUE' and post[8] == 'FALSE':
         #     #постинг TG

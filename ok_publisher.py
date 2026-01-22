@@ -3,6 +3,15 @@ import json
 from environs import Env
 from utils.ok_md5hex import get_md5, make_sig
 
+env = Env()
+env.read_env()
+
+global application_key, session_secret_key, access_token
+
+application_key = env.str('OK_APP_PUBLIC_KEY')
+session_secret_key = env.str('OK_SESSION_SECRET_KEY')
+access_token = env.str('OK_ACCESS_TOKEN')
+group_id=env.str('OK_GROUP_ID')
 
 def ok_api_response(method, extra_params):
     params = {
@@ -65,16 +74,28 @@ def publish_group_post(group_id, post_text, photo_token):
     )
 
 
+def delete_post_from_ok(ok_posted_id):
+    params = {
+        'application_key': application_key,
+        'method': 'mediatopic.deleteByAuthor',
+        'gid': group_id,
+        'topic_id': ok_posted_id,
+        'format': 'json',
+    }
+
+    params['sig'] = make_sig(params, session_secret_key)
+    params['access_token'] = access_token
+    url = 'https://api.ok.ru/fb.do'
+    response = requests.post(url, data=params)
+    response.raise_for_status()
+
+    result = response.json()
+    print('OK DELETE RESPONSE:', result)
+
+    return result is True
+
+
 def publish_post_to_ok(post_text, image_path):
-    env = Env()
-    env.read_env()
-    
-    global application_key, session_secret_key, access_token
-    application_key = env.str('OK_APP_PUBLIC_KEY')
-    session_secret_key = env.str('OK_SESSION_SECRET_KEY')
-    access_token = env.str('OK_ACCESS_TOKEN')
-    group_id=env.str('OK_GROUP_ID')
-    
     # 1. Получаем upload URL для загрузки изображения:
     upload_data = get_upload_url(group_id)
     upload_url = upload_data['upload_url']
