@@ -59,13 +59,37 @@ def find_posts_must_posted(content, service):
 
     for row_number, post in enumerate(content['values'][1:], start=2):
             if post[1]:
+                # проставляю галочки постинга обратно(на случай если пользователь снял)
+                # если пост уже есть
+                if post[9] and post[9] != 'Удален' and post[9] != 'Возникла ошибка':
+                    update_cell(row_number, 'G', True, service)
+                if post[10] and post[10] != 'Удален' and post[10] != 'Возникла ошибка':
+                    update_cell(row_number, 'H', True, service)
+                if post[11] and post[11] != 'Удален' and post[11] != 'Возникла ошибка':
+                    update_cell(row_number, 'I', True, service)
+
                 try:
                     want_posting_date = check_post_datetime(post, row_number, service)
                     need_publish = (
                         (
-                            (post[3] == 'TRUE' and post[6] == 'FALSE' and not post[9])
-                            or (post[4] == 'TRUE' and post[7] == 'FALSE' and not post[10])
-                            or (post[5] == 'TRUE' and post[8] == 'FALSE' and not post[11])
+                            (post[3] == 'TRUE' and post[6] == 'FALSE' and (
+                                    post[9] == 'Удален'
+                                    or post[9] == 'Возникла ошибка'
+                                    or not post[9]
+                                )
+                            )
+                            or (post[4] == 'TRUE' and post[7] == 'FALSE' and (
+                                    post[10] == 'Удален'
+                                    or post[10] == 'Возникла ошибка'
+                                    or not post[10]
+                                )
+                            )
+                            or (post[5] == 'TRUE' and post[8] == 'FALSE' and (
+                                    post[11] == 'Удален' 
+                                    or post[11] == 'Возникла ошибка'
+                                    or not post[11]
+                                )
+                            )
                         ) and now_datetime >= want_posting_date
                     )
 
@@ -73,15 +97,6 @@ def find_posts_must_posted(content, service):
                         posted_posts.append((row_number, post))
                 except Exception as er:
                     print(f'Ошибка: {er}')
-
-            # проставляю галочки постинга обратно(на случай если пользователь снял)
-            # если пост уже есть
-            if post[9]:
-                update_cell(row_number, 'G', True, service)
-            if post[10]:
-                update_cell(row_number, 'H', True, service)
-            if post[11]:
-                update_cell(row_number, 'I', True, service)
 
     return posted_posts
 
@@ -186,7 +201,7 @@ def check_temporary_posts(content, service):
                 delete_date = now_datetime + datetime_delta
                 formatted_date = delete_date.strftime('%d.%m.%Y %H:%M:%S')
                 update_cell(row_number, 'Q', formatted_date, service)
-            if post[15] == 'TRUE' and len(post) == 17:
+            if post[15] == 'TRUE' and len(post) > 16:
                 delete_date = datetime.strptime(post[16], '%d.%m.%Y %H:%M:%S')
                 if now_datetime >= delete_date:
                     update_cell(row_number, 'M', True, service)
