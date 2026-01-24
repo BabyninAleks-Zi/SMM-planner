@@ -246,7 +246,6 @@ def main():
                 None
             )
 
-
     delete_posts(must_delete_posts, service)
 
 
