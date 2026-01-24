@@ -1,5 +1,6 @@
 import requests
 import json
+import io
 from environs import Env
 from utils.ok_md5hex import get_md5, make_sig
 
@@ -39,17 +40,18 @@ def get_upload_url(group_id):
 
 
 def upload_photo(upload_url, image_source):
-    if image_source.startswith('http'):
-        image_data = requests.get(image_source).content
-        files = {'pic1': image_data}
-        response = requests.post(upload_url, files=files)
+    if isinstance(image_source, io.IOBase):
+        files = {'pic1': image_source}
+    elif isinstance(image_source, str):
+        if image_source.startswith('http'):
+            image_data = requests.get(image_source).content
+            files = {'pic1': image_data}
+        else:
+            files = {'pic1': open(image_source, 'rb')}
     else:
-        with open(image_source, 'rb') as image_file:
-            response = requests.post(
-                upload_url,
-                files={'pic1': image_file}
-            )
+        raise TypeError('Unsupported image_source type')
 
+    response = requests.post(upload_url, files=files)
     response.raise_for_status()
     return response.json()
 

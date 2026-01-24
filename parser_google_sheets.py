@@ -6,6 +6,7 @@ from utils.google_api import auth_in_google_sheets, get_sheet_content, update_ce
 from utils.google_docs_api import get_post_content_from_gdoc
 from tg_publisher import publish_post_to_tg, delete_post_from_tg
 from ok_publisher import publish_post_to_ok, delete_post_from_ok
+from vk_publisher import publish_post_to_vk, delete_post_from_vk
 import telegram
 
 
@@ -85,7 +86,10 @@ def posting_posts(row_number, post, post_text, image_path, service):
     '''Постит все посты в указанные соцсети из списка постов на постинг'''
     # Постинг ВК
     if post[3] == 'TRUE' and post[6] == 'FALSE':
-        pass
+        vk_post_id = publish_post_to_vk(post_text, image_path)
+        if vk_post_id:
+            update_cell(row_number, 'G', True, service)      # Пост в VK
+            update_cell(row_number, 'J', vk_post_id, service)  # ID поста VK
 
     # Постинг ОК
     if post[4] == 'TRUE' and post[7] == 'FALSE':
@@ -108,7 +112,7 @@ def delete_posts(must_delete_posts, service):
         # Удаление из ВК
         if post[6] == 'TRUE' and post[12] == 'TRUE':
             vk_post_id = post[9]
-            deleted = '' # метод удаления поста в ВК
+            deleted = delete_post_from_vk(vk_post_id)
 
             if deleted:
                 update_cell(row_number, 'D', False, service)    # флажок необходимости постинга
