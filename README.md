@@ -76,6 +76,12 @@ TG_BOT_TOKEN='Ключ от бота'
 CHAT_ID='@ID_Вашей_группы'
 ```
 
+## Настройка Google Docs
+
+Посты будут записываться в Google Docs, поэтому их оттуда необходимо получить, делать мы будет это также с помощью уже созданного сервисного аккаунта. Для того это стало возможным необходимо в аккаунте включить следующие расширения: [Google Docs API](https://console.cloud.google.com/apis/library/docs.googleapis.com) и [Google Drive API](https://console.cloud.google.com/apis/library/drive.googleapis.com).
+
+<img width="716" height="308" alt="image" src="https://github.com/user-attachments/assets/1408067a-60ac-488d-b28a-5b4f3341fdec" />
+
 ## Получение ключа от Одноклассников
 
 ## Получение ключа от Vkontakte
@@ -100,11 +106,13 @@ python general_smm_publisher.py
 
 <img width="1088" height="142" alt="image" src="https://github.com/user-attachments/assets/9c2504e5-bb5f-41fd-972e-0638536ec212" />
 
-## Настройка Google Docs
-
 ## Как работать с таблицей
 
-Первым делом Вам необходимо указать в столбике `ссылка на пост` ссылку на пост созданный в Google Docs. Далее проставляете время(если укажите только дату, будет выбрано стандартное время 13:00), когда пост необходимо выпустить. После чего галочками отмечаете соцсети в которых необходимо выложить Ваш пост:
+Создаете пост в Google Docs с тектом и фото, после чего копируете ссылку на данный документ:
+
+<img width="1473" height="448" alt="image" src="https://github.com/user-attachments/assets/00f991d1-aa18-4eeb-a0e5-7dd11c85d9a6" />
+
+Вставляете ссылку на пост созданный в Google Docs в столбик `ссылка на пост`. Далее проставляете время(если укажите только дату, будет выбрано стандартное время 13:00), когда пост необходимо выпустить. После чего галочками отмечаете соцсети в которых необходимо выложить Ваш пост:
 
 <img width="1683" height="180" alt="image" src="https://github.com/user-attachments/assets/d86a6874-9b23-4e5c-b9bf-b131dae17109" />
 
