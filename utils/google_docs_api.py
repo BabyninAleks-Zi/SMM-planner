@@ -4,6 +4,7 @@ import apiclient.discovery
 from urllib.parse import urlparse
 from oauth2client.service_account import ServiceAccountCredentials
 from utils.google_api import normalize_text
+import os
 
 
 def auth_docs():
@@ -52,6 +53,8 @@ def extract_first_image(document):
     content_discription = content_discription.split('.')
     file_ext = content_discription[1].strip('"')
 
+    os.makedirs('images', exist_ok=True)
+    
     image_path = f'images/from_gdoc.{file_ext}'
     with open(image_path, 'wb') as f:
         f.write(response.content)
