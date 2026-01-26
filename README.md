@@ -104,7 +104,7 @@ OK_GROUP_ID='id_вашей_группы'
 
 ## Настройка Google Docs
 
-Посты будут записываться в Google Docs, поэтому их оттуда необходимо получить, делать мы будет это также с помощью уже созданного сервисного аккаунта. Для того это стало возможным необходимо в аккаунте включить следующие расширения: [Google Docs API](https://console.cloud.google.com/apis/library/docs.googleapis.com) и [Google Drive API](https://console.cloud.google.com/apis/library/drive.googleapis.com).
+Посты будут записываться в Google Docs, поэтому их оттуда необходимо получить, делать мы будет это также с помощью уже созданного сервисного аккаунта. Для того чтобы это стало возможным необходимо в аккаунте включить следующие расширения: [Google Docs API](https://console.cloud.google.com/apis/library/docs.googleapis.com) и [Google Drive API](https://console.cloud.google.com/apis/library/drive.googleapis.com).
 
 <img width="716" height="308" alt="image" src="https://github.com/user-attachments/assets/1408067a-60ac-488d-b28a-5b4f3341fdec" />
 
