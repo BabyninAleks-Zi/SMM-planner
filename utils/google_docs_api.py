@@ -73,7 +73,3 @@ def get_post_content_from_gdoc(doc_url):
 
     clean_text = normalize_text(raw_text)
     return clean_text, image_path
-
-
-
-
