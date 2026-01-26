@@ -24,21 +24,21 @@ def vk_call(method, params):
     try:
         response = requests.post(url, params=params, timeout=30)
         response.raise_for_status()
-        data = response.json()
+        response_data = response.json()
     except requests.exceptions.RequestException as e:
         raise NetworkError('VK', str(e))
     except ValueError as e:
         raise ApiError('VK', f'Bad JSON from VK: {e}')
 
-    if 'error' in data:
-        err = data['error']
+    if 'error' in response_data:
+        err = response_data['error']
         code = str(err.get('error_code'))
         msg = err.get('error_msg', 'VK error')
         if code == '5':
             raise AuthError('VK', msg, code=code)
         raise ApiError('VK', msg, code=code)
 
-    return data.get('response')
+    return response_data.get('response')
 
 
 def upload_photo_for_wall(image_source):

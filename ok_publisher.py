@@ -33,16 +33,16 @@ def ok_api_response(method, extra_params):
     try:
         response = requests.get(OK_API_URL, params=params, timeout=20)
         response.raise_for_status()
-        data = response.json()
+        response_data = response.json()
     except requests.exceptions.RequestException as e:
         raise NetworkError('OK', str(e))
     except ValueError as e:
         raise ApiError('OK', f'Получен некорректный JSON от ОК: {e}')
 
-    if isinstance(data, dict) and data.get('error_code'):
-        raise ApiError('OK', f"{data.get('error_code')}: {data.get('error_msg')}")
+    if isinstance(response_data, dict) and response_data.get('error_code'):
+        raise ApiError('OK', f"{response_data.get('error_code')}: {response_data.get('error_msg')}")
 
-    return data
+    return response_data
 
 
 def get_upload_url(group_id):
